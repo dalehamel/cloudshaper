@@ -9,7 +9,6 @@ require_relative 'variable.rb'
 
 module Terraform
   class StackTemplate
-
     class VariableDefinition
       attr_reader :name, :default
 
@@ -17,7 +16,7 @@ module Terraform
         @name, @default = name, default
       end
 
-      def as_json(options = {})
+      def as_json(_options = {})
         {
           name: @name,
           default: @default
@@ -74,7 +73,7 @@ module Terraform
 
     attr_reader :stack
 
-    def initialize(stack, stack_dir)
+    def initialize(stack, _stack_dir)
       @stack = stack
       @stack_dir = data_dir
       FileUtils.mkdir_p(@stack_dir)
@@ -84,7 +83,7 @@ module Terraform
       @stack.stack_variables.each { |v| "TF_VAR_#{v.key}=#{v.value}" }
     end
 
-  protected
+    protected
 
     def variables
       @variables ||= begin

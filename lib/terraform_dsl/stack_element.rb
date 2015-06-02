@@ -7,15 +7,15 @@ module Terraform
       instance_eval &block
     end
 
-  private
+    private
 
     # Allows resource attributes to be specified with a nice syntax
     # If the method is implemented, it will be treated as a nested resource
     def method_missing(method_name, *args, &block)
       symbol = method_name.to_sym
       if args.length == 1
-        if args[0] == nil
-          raise "Passed nil to '#{method_name}'. Generally disallowed, subclass StackElement if you need this."
+        if args[0].nil?
+          fail "Passed nil to '#{method_name}'. Generally disallowed, subclass StackElement if you need this."
         end
         add_field(symbol, args[0])
       else
@@ -42,7 +42,7 @@ module Terraform
       if existing = @fields[symbol]
         # If it's already an array, just push to it
         unless existing.is_a?(Array)
-          @fields[symbol] = [ existing ]
+          @fields[symbol] = [existing]
         end
         @fields[symbol] << value
       else

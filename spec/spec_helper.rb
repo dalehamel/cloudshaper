@@ -16,7 +16,7 @@
 # users commonly want.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
-ENV["TERRAFORM_ENV"] ||= 'test'
+ENV['TERRAFORM_ENV'] ||= 'test'
 
 require 'simplecov'
 SimpleCov.start

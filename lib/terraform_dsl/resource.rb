@@ -1,4 +1,4 @@
-require_relative "stack_element.rb"
+require_relative 'stack_element.rb'
 
 module Terraform
   class Resource < StackElement
@@ -20,14 +20,14 @@ module Terraform
       @fields[:provisioner] << { cleanup_provisioner_type(provisioner_type) => provisioner_set.fields }
     end
 
-  private
+    private
 
     def cleanup_provisioner_type(provisioner_type)
       case provisioner_type.to_sym
       when :remote_exec
-        "remote-exec"
+        'remote-exec'
       when :local_exec
-        "local-exec"
+        'local-exec'
       else
         provisioner_type
       end

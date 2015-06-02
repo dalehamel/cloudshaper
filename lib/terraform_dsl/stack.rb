@@ -4,7 +4,6 @@ require_relative 'stack_templates.rb'
 
 module Terraform
   class Stack
-
     class << self
       def load(payload)
         return unless payload.present?
@@ -38,19 +37,17 @@ module Terraform
         ''
       end
 
-      "#{env.join(" ")} terraform #{cmd} #{options}"
+      "#{env.join(' ')} terraform #{cmd} #{options}"
     end
 
     def apply
       stack_data = self.class.generate
-      File.open(File.join(@data_dir,"#{@stack.name}.tf.json"), "w") { |f| f.write(stack_data) }
+      File.open(File.join(@data_dir, "#{@stack.name}.tf.json"), 'w') { |f| f.write(stack_data) }
       terraform(:apply)
     end
 
     def destroy
       terraform(:destroy)
     end
-
-
   end
 end

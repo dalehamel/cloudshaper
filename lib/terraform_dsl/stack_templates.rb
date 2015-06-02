@@ -8,7 +8,7 @@ module Terraform
       end
 
       def find(template_name)
-        raise "#{template_name} stack template note found" unless @stack.templates.key?(template_name.downcase)
+        fail "#{template_name} stack template note found" unless @stack.templates.key?(template_name.downcase)
         @stack_templates[template_name.downcase]
       end
 
