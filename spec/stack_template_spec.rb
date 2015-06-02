@@ -3,7 +3,8 @@ require 'spec_helper'
 RSpec.describe Terraform::StackTemplate do
   context 'variables' do
     it 'should accept variable definitions' do
-      template = Class.new(StackTemplate)
+      class VarDefAccept < StackTemplate; end
+      template = VarDefAccept
       template.variable(:name) { default 'default' }
 
       expect(template.variable_definitions[:name]).to be_a(StackTemplate::VariableDefinition)
@@ -11,45 +12,17 @@ RSpec.describe Terraform::StackTemplate do
       expect(template.variable_definitions[:name].default).to eql 'default'
     end
 
-    #    it 'should populate variables hash from defaults' do
-    #      template = Class.new(StackTemplate)
-    #      template.variable(:name) { default 'default' }
-    #
-    #      stack = Fabricate(:stack)
-    #      allow(stack).to receive(:template_class) { template }
-    #
-    #      expect(stack.template.variables).to eql(name: 'default')
-    #    end
+    it 'should populate variables hash from defaults' do
+      class VarPopulate < StackTemplate; end
+      template = VarPopulate
+      template.variable(:name) { default 'default' }
 
-    #    it 'should populate variables hash from stack variables' do
-    #      template = Class.new(StackTemplate)
-    #      template.variable(:name) { default 'default' }
-    #
-    #      stack = Fabricate(:stack)
-    #      allow(stack).to receive(:template_class) { template }
-    #      stack.stack_variables.create!(key: 'name', value: 'explicit')
-    #
-    #      expect(stack.template.variables).to eql(name: 'explicit')
-    #    end
-    #
-    #    it 'should merge the variables hash from both sources' do
-    #      template = Class.new(StackTemplate)
-    #      template.variable(:a) { default 'default' }
-    #      template.variable(:b) { default 'default' }
-    #      template.variable(:c) { }
-    #      template.variable(:d) { }
-    #
-    #      stack = Fabricate(:stack)
-    #      allow(stack).to receive(:template_class) { template }
-    #      stack.stack_variables.create!(key: 'a', value: 'explicit')
-    #      stack.stack_variables.create!(key: 'c', value: 'explicit')
-    #
-    #      expect(stack.template.variables).to eql(a: 'explicit', b: 'default', c: 'explicit', d: nil)
-    #      expect(stack.variables).to eql(stack.template.variables)
-    #    end
+      expect(template.variables).to eql(name: 'default')
+    end
 
     it 'should register variables' do
-      template = Class.new(StackTemplate)
+      class VarRegister < StackTemplate; end
+      template = VarRegister
       template.variable(:a) { default 'default' }
 
       expect(template.stack_elements[:variable][:a]).to be_a(Hash)
@@ -59,7 +32,8 @@ RSpec.describe Terraform::StackTemplate do
 
   context 'resources' do
     it 'should register resources' do
-      template = Class.new(StackTemplate)
+      class ResourceRegister < StackTemplate; end
+      template = ResourceRegister
       template.resource('aws_instance', :a) { default 'default' }
 
       instance = template.stack_elements[:resource][:aws_instance]

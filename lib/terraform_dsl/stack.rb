@@ -3,9 +3,11 @@ require_relative 'stack_templates.rb'
 module Terraform
   # Wrapper to instantiate a stack from a yaml definition
   class Stack
+    class MalformedConfig < Exception; end
     class << self
       def load(config)
-        return unless config.is_a?(Hash)
+        fail MalformedConfig, "Configuration malformed at #{config}" unless config.is_a?(Hash)
+        fail MalformedConfig, "A name must be specified for the stack #{config}" unless config.key?('name')
         new(config)
       end
     end
@@ -13,15 +15,35 @@ module Terraform
     attr_reader :name, :description, :template, :variables
 
     def initialize(config)
-      @name = config['name'] || '' # should raise an if there's no name
+      @name = config['name']
       @template = StackTemplates.find(config['template'])
       @description = config['description'] || ''
-      @data_dir = config['work_dir'] || File.join(File.expand_path(File.dirname(__FILE__)), 'data')
+      @data_dir = config['data_dir'] || 'data' # File.join(File.expand_path(File.dirname(__FILE__)), 'data')
       @variables = config['variables'] || {}
       @stack_dir = File.join(@data_dir, 'stacks', @name)
     end
 
+    def apply
+      terraform(:apply)
+    end
+
+    def destroy
+      terraform(:destroy)
+    end
+
+    def plan
+      terraform(:plan)
+    end
+
+    private
+
+    def prepare
+      FileUtils.mkdir_p(@stack_dir)
+      File.open(File.join(@stack_dir, 'terraform.tf.json'), 'w') { |f| f.write(generate) }
+    end
+
     def terraform(cmd)
+      prepare
       options = begin
         case cmd
         when :apply
@@ -37,17 +59,22 @@ module Terraform
         end
       end
 
-      "#{env.join(' ')} terraform #{cmd} #{options}"
+      command("terraform #{cmd} #{options}")
     end
 
-    def apply
-      stack_data = self.class.generate
-      File.open(File.join(@data_dir, "#{@stack.name}.tf.json"), 'w') { |f| f.write(stack_data) }
-      terraform(:apply)
+    def generate
+      @template.generate
     end
 
-    def destroy
-      terraform(:destroy)
+    def env
+      vars = {}
+      @variables.each { |k, v| vars["TF_VAR_#{k}"] = v }
+      vars
+    end
+
+    def command(cmd)
+      Process.waitpid(spawn(env, cmd, chdir: @stack_dir))
+      fail 'Command failed' unless $CHILD_STATUS.to_i == 0
     end
   end
 end

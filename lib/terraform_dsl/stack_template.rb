@@ -66,49 +66,23 @@ module Terraform
         JSON.pretty_generate(@stack_elements)
       end
 
+      def variables
+        @variables ||= begin
+          hash = {}
+
+          variable_definitions.each do |name, definition|
+            hash[name] = definition.default
+          end
+
+          hash
+        end
+      end
+
       alias_method :resource, :register_resource
       alias_method :variable, :register_variable
       alias_method :provider, :register_provider
     end
 
     reset!
-
-    attr_reader :stack
-
-    def initialize(stack, _stack_dir)
-      @stack = stack
-      @stack_dir = data_dir
-      FileUtils.mkdir_p(@stack_dir)
-    end
-
-    def env
-      @stack.stack_variables.each { |v| "TF_VAR_#{v.key}=#{v.value}" }
-    end
-
-    protected
-
-    def variables
-      @variables ||= begin
-        hash = {}
-
-        variable_definitions.each do |name, definition|
-          hash[name] = definition.default
-        end
-
-        stack.stack_variables.each do |sv|
-          hash[sv.key.to_sym] = sv.value
-        end
-
-        hash
-      end
-    end
-
-    def variable_definitions
-      self.class.variable_definitions
-    end
-
-    def stack_elements
-      self.class.stack_elements
-    end
   end
 end
