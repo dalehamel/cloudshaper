@@ -18,7 +18,7 @@ module Terraform
       @name = config['name']
       @template = StackTemplates.find(config['template'])
       @description = config['description'] || ''
-      @data_dir = config['data_dir'] || 'data' # File.join(File.expand_path(File.dirname(__FILE__)), 'data')
+      @data_dir = config['data_dir'] || 'data'
       @variables = config['variables'] || {}
       @stack_dir = File.join(@data_dir, 'stacks', @name)
     end
