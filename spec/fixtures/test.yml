@@ -1,0 +1,5 @@
+name: test-stack
+description: a stack for testing
+template: teststack
+variables:
+  flavor: t1.micro
