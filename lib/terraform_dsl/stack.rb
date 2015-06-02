@@ -3,6 +3,7 @@ require 'yaml'
 require_relative 'stack_templates.rb'
 
 module Terraform
+  # Wrapper to instantiate a stack from a yaml definition
   class Stack
     class << self
       def load(payload)
@@ -24,17 +25,19 @@ module Terraform
     end
 
     def terraform(cmd)
-      options = case cmd
-      when :apply
-        '-input=false'
-      when :destroy
-        '-input=false -force'
-      when :plan
-        '-input=false'
-      when :graph
-        '-draw-cycles'
-      else
-        ''
+      options = begin
+        case cmd
+        when :apply
+          '-input=false'
+        when :destroy
+          '-input=false -force'
+        when :plan
+          '-input=false'
+        when :graph
+          '-draw-cycles'
+        else
+          ''
+        end
       end
 
       "#{env.join(' ')} terraform #{cmd} #{options}"

@@ -8,7 +8,9 @@ require_relative 'provider.rb'
 require_relative 'variable.rb'
 
 module Terraform
+  # Wrapper for DSL to provide a templated stack
   class StackTemplate
+    # Templated variables with optional default values
     class VariableDefinition
       attr_reader :name, :default
 
@@ -43,8 +45,8 @@ module Terraform
         provider = Terraform::Provider.new(&block)
         case name
         when 'aws'
-          provider.fields[:access_key] = Secrets[:aws][:access_key_id]
-          provider.fields[:secret_key] = Secrets[:aws][:secret_access_key]
+          provider.fields[:access_key] = SECRETS[:aws][:access_key_id]
+          provider.fields[:secret_key] = SECRETS[:aws][:secret_access_key]
         end
         @stack_elements[:provider][name.to_sym] = provider.fields
       end

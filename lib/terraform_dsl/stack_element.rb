@@ -1,10 +1,11 @@
 module Terraform
+  # Defines a single terraform stack element, subclass for any element defined in terraform DSL
   class StackElement
     attr_reader :fields
 
     def initialize(&block)
       @fields = {}
-      instance_eval &block
+      instance_eval(&block)
     end
 
     private
@@ -39,11 +40,10 @@ module Terraform
     end
 
     def add_field(symbol, value)
-      if existing = @fields[symbol]
+      existing = @fields[symbol]
+      if existing
         # If it's already an array, just push to it
-        unless existing.is_a?(Array)
-          @fields[symbol] = [existing]
-        end
+        @fields[symbol] = [existing] unless existing.is_a?(Array)
         @fields[symbol] << value
       else
         @fields[symbol] = value

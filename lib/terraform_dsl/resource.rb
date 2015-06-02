@@ -1,6 +1,7 @@
 require_relative 'stack_element.rb'
 
 module Terraform
+  # Defines a terraform resource
   class Resource < StackElement
     attr_reader :resource_name
 
@@ -34,6 +35,7 @@ module Terraform
     end
   end
 
+  # Defines a terraform resource provisioner
   class Provisioner < StackElement
   end
 end

@@ -1,5 +1,5 @@
-
 module Terraform
+  # Singleton to keep track of stack templates
   class StackTemplates
     class StackNotFound < StandardError; end
     class << self
