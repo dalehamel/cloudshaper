@@ -1,7 +1,8 @@
 PATH
   remote: .
   specs:
-    terraform_dsl (0.0.0)
+    terraform_dsl (0.0.1)
+      rake (= 10.4.2)
 
 GEM
   remote: https://rubygems.org/
@@ -33,7 +34,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  rake (= 10.4.2)
   rspec (= 3.2.0)
   simplecov (= 0.10.0)
   terraform_dsl!

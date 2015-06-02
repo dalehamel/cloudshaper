@@ -20,7 +20,7 @@ module Terraform
       @description = config['description'] || ''
       @data_dir = config['data_dir'] || 'data'
       @variables = config['variables'] || {}
-      @stack_dir = File.join(@data_dir, 'stacks', @name)
+      @stack_dir = File.expand_path(File.join(@data_dir, 'stacks', @name))
     end
 
     def apply
@@ -33,6 +33,18 @@ module Terraform
 
     def plan
       terraform(:plan)
+    end
+
+    def show
+      terraform(:show)
+    end
+
+    def to_s
+      <<-eos
+Name: #{@name}
+Description: #{@description}
+Stack Directory: #{@stack_dir}
+      eos
     end
 
     private
