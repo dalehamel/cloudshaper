@@ -1,14 +1,11 @@
-require 'yaml'
-
 require_relative 'stack_templates.rb'
 
 module Terraform
   # Wrapper to instantiate a stack from a yaml definition
   class Stack
     class << self
-      def load(payload)
-        return unless payload.present?
-        config = YAML.load(payload)
+      def load(config)
+        return unless config.is_a?(Hash)
         new(config)
       end
     end
