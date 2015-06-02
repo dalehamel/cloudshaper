@@ -7,8 +7,7 @@ Gem::Specification.new do |s|
   s.authors     = ['Dale Hamel']
   s.email       = 'dale.hamel@srvthe.net'
   s.files       = Dir['lib/**/*']
-  s.homepage    =
-    'http://rubygems.org/gems/terraform_dsl'
+  s.homepage    = 'https://rubygems.org/gems/terraform_dsl'
   s.license       = 'MIT'
   s.add_development_dependency 'simplecov', ['=0.10.0']
   s.add_development_dependency 'rake', ['=10.4.2']
