@@ -1,0 +1,6 @@
+{
+  "heroku": {
+    "HEROKU_EMAIL": "EMAIL",
+    "HEROKU_API_KEY": "API_KEY"
+  }
+}

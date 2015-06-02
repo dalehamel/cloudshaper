@@ -1,0 +1,6 @@
+{
+  "cloudflare": {
+    "CLOUDFLARE_EMAIL": "EMAIL",
+    "CLOUDFLARE_TOKEN": "TOKEN"
+  }
+}

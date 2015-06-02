@@ -1,0 +1,7 @@
+{
+  "cloudstack": {
+    "CLOUDSTACK_API_URL": "API_URL",
+    "CLOUDSTACK_API_KEY": "API_KEY",
+    "CLOUDSTACK_SECRET_KEY": "SECRET_KEY"
+  }
+}

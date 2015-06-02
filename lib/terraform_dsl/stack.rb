@@ -81,6 +81,11 @@ Stack Directory: #{@stack_dir}
     def env
       vars = {}
       @variables.each { |k, v| vars["TF_VAR_#{k}"] = v }
+      @template.secrets.each do |_provider, secrets|
+        secrets.each do |k, v|
+          vars[k.to_s] = v
+        end
+      end
       vars
     end
 

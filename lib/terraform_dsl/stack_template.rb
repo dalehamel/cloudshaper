@@ -2,7 +2,6 @@ require 'json'
 require 'fileutils'
 
 require_relative 'stack_templates.rb'
-require_relative 'secrets.rb'
 require_relative 'resource.rb'
 require_relative 'provider.rb'
 require_relative 'variable.rb'
@@ -27,7 +26,7 @@ module Terraform
     end
 
     class << self
-      attr_accessor :stack_elements, :variable_definitions
+      attr_accessor :stack_elements, :variable_definitions, :secrets
 
       def register_resource(resource_type, name, &block)
         @stack_elements[:resource] ||= {}
@@ -43,17 +42,14 @@ module Terraform
 
       def register_provider(name, &block)
         provider = Terraform::Provider.new(&block)
-        case name
-        when 'aws'
-          provider.fields[:access_key] = SECRETS[:aws][:access_key_id]
-          provider.fields[:secret_key] = SECRETS[:aws][:secret_access_key]
-        end
+        @secrets.merge!(provider.load_secrets(name))
         @stack_elements[:provider][name.to_sym] = provider.fields
       end
 
       def reset!
         @stack_elements = { resource: {}, provider: {}, variable: {} }
         @variable_definitions = {}
+        @secrets = {}
       end
 
       def inherited(subclass)
