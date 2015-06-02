@@ -5,3 +5,6 @@
 This is a simple DSL for wrapping hashicorp's [terraform configuration](https://terraform.io/docs/configuration/index.html).
 
 It supports almost identical syntax, and generates JSON that terraform will understand.
+
+
+[license](LICENSE)
