@@ -1,5 +1,6 @@
-require_relative 'stack_templates.rb'
+require_relative 'stack_templates'
 require_relative 'command'
+require_relative 'remote'
 
 module Terraform
   # Wrapper to instantiate a stack from a yaml definition
@@ -9,20 +10,25 @@ module Terraform
       def load(config)
         fail MalformedConfig, "Configuration malformed at #{config}" unless config.is_a?(Hash)
         fail MalformedConfig, "A name must be specified for the stack #{config}" unless config.key?('name')
+        fail MalformedConfig, 'You must specify a uuid. Get one from rake uuid and add it to the config' unless config.key?('uuid')
         new(config)
       end
     end
 
-    attr_reader :name, :description, :template, :variables, :stack_dir
+    attr_reader :name, :description, :template, :variables,
+                :stack_dir, :stack_id, :remote
 
     def initialize(config)
       @name = config['name']
+      @uuid = config['uuid']
       @template = StackTemplates.find(config['template'])
       @description = config['description'] || ''
       @data_dir = config['data_dir'] || 'data'
       @variables = config['variables'] || {}
+      @remote = config['remote'] || {}
       @stack_dir = File.expand_path(File.join(@data_dir, 'stacks', @name))
-      @variables['terraform_stack_id'] = "terraform_#{@name}" # FIXME: append a UUID of some kind
+      @stack_id = "terraform_#{@name}_#{@uuid}"
+      @variables['terraform_stack_id'] = @stack_id
     end
 
     def apply
@@ -39,6 +45,18 @@ module Terraform
 
     def show
       Command.new(self, :show).execute
+    end
+
+    def pull
+      Remote.new(self, :pull).execute
+    end
+
+    def push
+      Remote.new(self, :pull).execute
+    end
+
+    def remote_config
+      Remote.new(self, :config).execute
     end
 
     def to_s

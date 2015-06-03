@@ -1,4 +1,5 @@
 require_relative '../terraform_dsl.rb'
+require 'securerandom'
 
 desc 'Loads available stack templates'
 task :load do
@@ -55,4 +56,35 @@ task :destroy, [:name] => :load do |_t, args|
   fail 'Specify a name' unless args[:name]
   stack = Terraform::Stacks.stacks[args[:name]]
   stack.destroy
+end
+
+desc 'Push stack states to remote location'
+task push: :load do
+  Terraform::Stacks.stacks.each do |_name, stack|
+    puts stack
+    stack.push
+  end
+end
+
+desc 'Pulls stack states from remote location'
+task pull: [:load, :remote_config] do
+  Terraform::Stacks.stacks.each do |_name, stack|
+    puts stack
+    stack.pull
+  end
+end
+
+desc 'Sets up remote config for all stacks that support it'
+task remote_config: :load do
+  Terraform::Stacks.stacks.each do |_name, stack|
+    puts stack
+    stack.remote_config
+  end
+end
+
+desc 'Generate a UUID for a stack, so stacks do not clobber each other'
+task :uuid do
+  uuid = "#{Time.now.utc.to_i}_#{SecureRandom.urlsafe_base64(6)}"
+  puts "uuid: #{uuid}"
+  puts 'Add this as a field to a new stack to prevent clobbering stacks with the same name'
 end
