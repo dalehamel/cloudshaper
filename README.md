@@ -76,6 +76,12 @@ stacks:
       key: SOMESSHKEY
 ```
 
+You may also specify a 'common' block, that will be merged into all stacks.
+
+Terraform stacks need somewhere to store their state. By default, this will be the local filesystem.
+
+It's highly recommended that you use a [remote backend](https://www.terraform.io/docs/commands/remote-config.html) instead, so that you can share your stacks.
+
 ### Tasks
 
 Create a rake file that loads your templates, and calls Terraform::Tasks.loadall.
