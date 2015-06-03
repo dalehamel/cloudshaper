@@ -13,12 +13,12 @@ task list: :load do
   end
 end
 
-desc 'Apply all pending stack changes'
-task apply_all: :load do
-  Terraform::Stacks.stacks.each do |_name, stack|
-    puts stack
-    stack.apply
-  end
+desc 'Show details about a stack by name'
+task :show, [:name] => :load do |_t, args|
+  fail 'Specify a name' unless args[:name]
+  stack = Terraform::Stacks.stacks[args[:name]]
+  puts stack
+  stack.show
 end
 
 desc 'Show all pending stack changes'
@@ -27,14 +27,6 @@ task show_all: :load do
     puts stack
     stack.plan
   end
-end
-
-desc 'Show details about a stack by name'
-task :show, [:name] => :load do |_t, args|
-  fail 'Specify a name' unless args[:name]
-  stack = Terraform::Stacks.stacks[args[:name]]
-  puts stack
-  stack.show
 end
 
 desc 'Show pending changes for a stack'
@@ -51,6 +43,14 @@ task :apply, [:name] => :load do |_t, args|
   stack.apply
 end
 
+desc 'Apply all pending stack changes'
+task apply_all: :load do
+  Terraform::Stacks.stacks.each do |_name, stack|
+    puts stack
+    stack.apply
+  end
+end
+
 desc 'Destroy a stack'
 task :destroy, [:name] => :load do |_t, args|
   fail 'Specify a name' unless args[:name]
@@ -58,24 +58,42 @@ task :destroy, [:name] => :load do |_t, args|
   stack.destroy
 end
 
+desc 'Push stack state to remote location'
+task :push, [:name] => [:load, :remote_config] do |_t, args|
+  stack = Terraform::Stacks.stacks[args[:name]]
+  stack.push
+end
+
 desc 'Push stack states to remote location'
-task push: :load do
+task push_all: [:load, :remote_config_all] do
   Terraform::Stacks.stacks.each do |_name, stack|
     puts stack
     stack.push
   end
 end
 
+desc 'Pulls stack state from remote location'
+task :pull, [:name] => [:load, :remote_config] do |_t, args|
+  stack = Terraform::Stacks.stacks[args[:name]]
+  stack.pull
+end
+
 desc 'Pulls stack states from remote location'
-task pull: [:load, :remote_config] do
+task pull_all: [:load, :remote_config_all] do
   Terraform::Stacks.stacks.each do |_name, stack|
     puts stack
     stack.pull
   end
 end
 
+desc 'Sets up remote config for a stack'
+task :remote_config, [:name] => [:load] do |_t, args|
+  stack = Terraform::Stacks.stacks[args[:name]]
+  stack.remote_config
+end
+
 desc 'Sets up remote config for all stacks that support it'
-task remote_config: :load do
+task remote_config_all: :load do
   Terraform::Stacks.stacks.each do |_name, stack|
     puts stack
     stack.remote_config
