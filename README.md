@@ -66,9 +66,14 @@ For other providers, see [example configs](examples/secretconfig)
 ### YAML
 
 ```
-cat stacks.yml
+common:
+  remote:
+    s3:
+      bucket: quartermaster-terraform
+      region: us-east-1
 stacks:
   - name: teststack
+    uuid: 1433296428_0safh8-Y # must be unique
     description: just a test stack
     template: simpleapp
     variables:
