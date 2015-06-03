@@ -104,4 +104,8 @@ rake show[name]     # Show details about a stack by name
 rake show_all       # Show all pending stack changes
 ```
 
+# Credits
+
+Inspired by [terraframe](https://github.com/eropple/terraframe), a very similar but less generic and complete terraform DSL.
+
 [license](LICENSE)
