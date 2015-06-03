@@ -9,6 +9,10 @@ module Terraform
       @resource_name = resource_name
       @resource_type = resource_type
       super(&block)
+
+      # Allow provider specific post processing
+      sym = "post_processing_#{resource_type.split('_').first}"
+      send(sym) if self.respond_to?(sym, include_private: true)
     end
 
     # Allow provisioner blocks to be nested within resources
@@ -34,7 +38,6 @@ module Terraform
       end
     end
   end
-
   # Defines a terraform resource provisioner
   class Provisioner < StackElement
   end

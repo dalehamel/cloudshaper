@@ -50,6 +50,7 @@ module Terraform
         @stack_elements = { resource: {}, provider: {}, variable: {} }
         @variable_definitions = {}
         @secrets = {}
+        variable(:terraform_stack_id) {}
       end
 
       def inherited(subclass)
@@ -69,7 +70,6 @@ module Terraform
           variable_definitions.each do |name, definition|
             hash[name] = definition.default
           end
-
           hash
         end
       end

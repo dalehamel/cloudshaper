@@ -1,6 +1,9 @@
+require_relative 'aws/tagging.rb'
+
 module Terraform
   # Defines a single terraform stack element, subclass for any element defined in terraform DSL
   class StackElement
+    include Aws
     attr_reader :fields
 
     def initialize(&block)

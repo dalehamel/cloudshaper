@@ -1,4 +1,5 @@
 require_relative 'stack_templates.rb'
+require_relative 'command'
 
 module Terraform
   # Wrapper to instantiate a stack from a yaml definition
@@ -12,7 +13,7 @@ module Terraform
       end
     end
 
-    attr_reader :name, :description, :template, :variables
+    attr_reader :name, :description, :template, :variables, :stack_dir
 
     def initialize(config)
       @name = config['name']
@@ -21,22 +22,23 @@ module Terraform
       @data_dir = config['data_dir'] || 'data'
       @variables = config['variables'] || {}
       @stack_dir = File.expand_path(File.join(@data_dir, 'stacks', @name))
+      @variables['terraform_stack_id'] = "terraform_#{@name}" # FIXME: append a UUID of some kind
     end
 
     def apply
-      terraform(:apply)
+      Command.new(self, :apply).execute
     end
 
     def destroy
-      terraform(:destroy)
+      Command.new(self, :destroy).execute
     end
 
     def plan
-      terraform(:plan)
+      Command.new(self, :plan).execute
     end
 
     def show
-      terraform(:show)
+      Command.new(self, :show).execute
     end
 
     def to_s
@@ -45,53 +47,6 @@ Name: #{@name}
 Description: #{@description}
 Stack Directory: #{@stack_dir}
       eos
-    end
-
-    private
-
-    def prepare
-      FileUtils.mkdir_p(@stack_dir)
-      File.open(File.join(@stack_dir, 'terraform.tf.json'), 'w') { |f| f.write(generate) }
-    end
-
-    def terraform(cmd)
-      prepare
-      options = begin
-        case cmd
-        when :apply
-          '-input=false'
-        when :destroy
-          '-input=false -force'
-        when :plan
-          '-input=false'
-        when :graph
-          '-draw-cycles'
-        else
-          ''
-        end
-      end
-
-      command("terraform #{cmd} #{options}")
-    end
-
-    def generate
-      @template.generate
-    end
-
-    def env
-      vars = {}
-      @variables.each { |k, v| vars["TF_VAR_#{k}"] = v }
-      @template.secrets.each do |_provider, secrets|
-        secrets.each do |k, v|
-          vars[k.to_s] = v
-        end
-      end
-      vars
-    end
-
-    def command(cmd)
-      Process.waitpid(spawn(env, cmd, chdir: @stack_dir))
-      fail 'Command failed' unless $CHILD_STATUS.to_i == 0
     end
   end
 end

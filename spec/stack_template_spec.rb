@@ -17,7 +17,9 @@ RSpec.describe Terraform::StackTemplate do
       template = VarPopulate
       template.variable(:name) { default 'default' }
 
-      expect(template.variables).to eql(name: 'default')
+      expect(template.variables).to be_a(Hash)
+      expect(template.variables).to include(:name)
+      expect(template.variables[:name]).to eql('default')
     end
 
     it 'should register variables' do
@@ -39,7 +41,8 @@ RSpec.describe Terraform::StackTemplate do
       instance = template.stack_elements[:resource][:aws_instance]
       expect(instance).to include(:a)
       expect(instance[:a]).to be_a(Hash)
-      expect(instance[:a]).to eql(default: 'default')
+      expect(instance[:a]).to include(:default)
+      expect(instance[:a][:default]).to eql('default')
     end
 
     it 'should register resources with connections' do
