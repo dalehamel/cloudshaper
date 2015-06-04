@@ -25,6 +25,7 @@ If you get lost, take a look at the [sample app](https://github.com/dalehamel/te
 
 Create a stack template, like one of our [examples](examples), such as our [simple app](examples/simple_app.rb)
 
+
 Generally, you need to do:
 
 ```
@@ -65,6 +66,14 @@ For other providers, see [example configs](examples/secretconfig)
 
 ### YAML
 
+After setting up your rakefile, as below, just run:
+
+```
+bundle exec rake terraform:init
+```
+
+This will set up your stacks.yml with an initial config template, which you can customize for your chosen stack template
+
 ```
 common:
   remote:
@@ -92,11 +101,7 @@ It's highly recommended that you use a [remote backend](https://www.terraform.io
 Create a rake file that loads your templates, and calls Terraform::Tasks.loadall.
 
 ```
-# Load your stack templates
-require_relative 'simple_app.rb'
-
-## Loads terraform tasks
-#require 'terraform_dsl/tasks'
+## Loads terraform tasks and templates
 require 'terraform_dsl'
 Terraform::Tasks.loadall
 
@@ -105,14 +110,21 @@ Terraform::Tasks.loadall
 This will add some terraform tasks for managing your terraform stacks:
 
 ```
-rake apply[name]    # Apply pending changes for a stack
-rake apply_all      # Apply all pending stack changes
-rake destroy[name]  # Destroy a stack
-rake list           # List all available stacks
-rake load           # Loads available stack templates
-rake plan[name]     # Show pending changes for a stack
-rake show[name]     # Show details about a stack by name
-rake show_all       # Show all pending stack changes
+rake terraform:apply[name]          # Apply pending changes for a stack
+rake terraform:apply_all            # Apply all pending stack changes
+rake terraform:destroy[name]        # Destroy a stack
+rake terraform:init                 # Initialize stacks.yml if it does not exist
+rake terraform:list                 # List all available stacks
+rake terraform:load                 # Loads available stack templates
+rake terraform:plan[name]           # Show pending changes for a stack
+rake terraform:pull[name]           # Pulls stack state from remote location
+rake terraform:pull_all             # Pulls stack states from remote location
+rake terraform:push[name]           # Push stack state to remote location
+rake terraform:push_all             # Push stack states to remote location
+rake terraform:remote_config[name]  # Sets up remote config for a stack
+rake terraform:remote_config_all    # Sets up remote config for all stacks that support it
+rake terraform:show[name]           # Show details about a stack by name
+rake terraform:show_all             # Show all pending stack changes
 ```
 
 # Credits
