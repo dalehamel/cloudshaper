@@ -1,9 +1,13 @@
 require_relative '../terraform_dsl.rb'
-require 'securerandom'
 
 desc 'Loads available stack templates'
 task :load do
   Terraform::Stacks.load
+end
+
+desc 'Initialize stacks.yml if it does not exist'
+task :init do
+  Terraform::Stacks.init
 end
 
 desc 'List all available stacks'
@@ -102,7 +106,7 @@ end
 
 desc 'Generate a UUID for a stack, so stacks do not clobber each other'
 task :uuid do
-  uuid = "#{Time.now.utc.to_i}_#{SecureRandom.urlsafe_base64(6)}"
+  uuid = Terraform::Stacks.uuid
   puts "uuid: #{uuid}"
   puts 'Add this as a field to a new stack to prevent clobbering stacks with the same name'
 end

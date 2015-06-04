@@ -1,4 +1,5 @@
 require 'yaml'
+require 'securerandom'
 
 require_relative 'stack.rb'
 
@@ -19,6 +20,35 @@ module Terraform
           stack = Stack.load(stack_spec.merge(common))
           @stacks[stack.name] = stack
         end
+      end
+
+      def init
+        config = ENV['STACK_CONFIG'] || 'stacks.yml'
+        fail "stacks.yaml already exists at #{File.expand_path(config)}" if File.exist?(config)
+        File.open(config,'w') do |f|
+          f.write(YAML.dump(base_config))
+        end
+      end
+
+      def uuid
+        "#{Time.now.utc.to_i}_#{SecureRandom.urlsafe_base64(6)}"
+      end
+
+      def base_config
+        {
+          'common' => {},
+          'stacks' => [ base_stack_config ],
+        }
+      end
+
+      def base_stack_config
+        {
+          'name' => 'SET_NAME',
+          'uuid' => uuid,
+          'description' => 'SET_A_DESCRIPTION',
+          'template' => 'SET_A_TEMPLATE',
+          'variables' => {},
+        }
       end
 
       def reset!

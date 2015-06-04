@@ -21,7 +21,6 @@ module Terraform
     end
 
     def execute
-      puts @command
       Process.waitpid(spawn(env, @command, chdir: @stack.stack_dir))
       fail 'Command failed' unless $CHILD_STATUS.to_i == 0
     end
