@@ -5,6 +5,8 @@ require_relative 'stack_templates.rb'
 require_relative 'resource.rb'
 require_relative 'provider.rb'
 require_relative 'variable.rb'
+require_relative 'module.rb'
+require_relative 'output.rb'
 
 module Terraform
   # Wrapper for DSL to provide a templated stack
@@ -40,6 +42,16 @@ module Terraform
         @variable_definitions[name.to_sym] = VariableDefinition.new(name, default: new_variable[:default])
       end
 
+      def register_output(name, &block)
+        new_output = Terraform::Output.new(&block).fields
+        @stack_elements[:output][name.to_sym] = new_output
+      end
+
+      def register_module(name, &block)
+        new_module = Terraform::Module.new(&block).fields
+        @stack_elements[:module][name.to_sym] = new_module
+      end
+
       def register_provider(name, &block)
         provider = Terraform::Provider.new(&block)
         @secrets.merge!(provider.load_secrets(name))
@@ -47,7 +59,7 @@ module Terraform
       end
 
       def reset!
-        @stack_elements = { resource: {}, provider: {}, variable: {} }
+        @stack_elements = { resource: {}, provider: {}, variable: {}, output: {}, module: {} }
         @variable_definitions = {}
         @secrets = {}
         variable(:terraform_stack_id) {}
@@ -77,6 +89,8 @@ module Terraform
       alias_method :resource, :register_resource
       alias_method :variable, :register_variable
       alias_method :provider, :register_provider
+      alias_method :output,   :register_output
+      alias_method :module,   :register_module
     end
 
     reset!

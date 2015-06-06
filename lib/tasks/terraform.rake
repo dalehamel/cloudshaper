@@ -22,7 +22,7 @@ namespace 'terraform' do
     fail 'Specify a name' unless args[:name]
     stack = Terraform::Stacks.stacks[args[:name]]
     puts stack
-    stack.show
+    stack.plan
   end
 
   desc 'Show all pending stack changes'
