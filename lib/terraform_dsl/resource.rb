@@ -5,10 +5,10 @@ module Terraform
   class Resource < StackElement
     attr_reader :resource_name
 
-    def initialize(resource_name, resource_type, &block)
+    def initialize(parent_module, resource_name, resource_type, &block)
       @resource_name = resource_name
       @resource_type = resource_type
-      super(&block)
+      super(parent_module, &block)
 
       # Allow provider specific post processing
       sym = "post_processing_#{resource_type.split('_').first}"
@@ -21,7 +21,7 @@ module Terraform
 
       @fields[:provisioner] = @fields[:provisioner] || []
 
-      provisioner_set = Provisioner.new(&block)
+      provisioner_set = Provisioner.new(@module, &block)
       @fields[:provisioner] << { cleanup_provisioner_type(provisioner_type) => provisioner_set.fields }
     end
 

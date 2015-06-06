@@ -6,7 +6,8 @@ module Terraform
     include Aws
     attr_reader :fields
 
-    def initialize(&block)
+    def initialize(stack_module, &block)
+      @module = stack_module
       @fields = {}
       instance_eval(&block)
     end
@@ -23,8 +24,13 @@ module Terraform
         end
         add_field(symbol, args[0])
       else
-        add_field(symbol, Terraform::StackElement.new(&block).fields)
+        add_field(symbol, Terraform::StackElement.new(@module, &block).fields)
       end
+    end
+
+    # Get the runtime value of a variable
+    def get(variable_name)
+      @module.get(variable_name)
     end
 
     # Reference a variable

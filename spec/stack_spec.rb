@@ -1,4 +1,4 @@
 require 'spec_helper'
 
-RSpec.describe Terraform::StackTemplate do
+RSpec.describe Terraform::Stack do
 end

@@ -20,7 +20,10 @@ if ENV['TERRAFORM_ENV'] == 'test'
 else
   SECRETS ||= begin
     secrets_file = File.expand_path(ENV['CONFIG_PATH'] || 'config/secrets.json')
-    fail 'config/secrets.json not found' unless File.exist?(secrets_file)
-    JSON.parse(File.read(secrets_file), symbolize_names: true, object_class: SecretHash)
+    if File.exist?(secrets_file)
+      JSON.parse(File.read(secrets_file), symbolize_names: true, object_class: SecretHash)
+    else
+      {}
+    end
   end
 end

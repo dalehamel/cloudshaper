@@ -46,7 +46,7 @@ module Terraform
           'name' => 'SET_NAME',
           'uuid' => uuid,
           'description' => 'SET_A_DESCRIPTION',
-          'template' => 'SET_A_TEMPLATE',
+          'root' => 'SET_A_TEMPLATE',
           'variables' => {},
         }
       end

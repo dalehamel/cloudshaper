@@ -12,7 +12,7 @@ module Terraform
     def env
       vars = {}
       @stack.variables.each { |k, v| vars["TF_VAR_#{k}"] = v }
-      @stack.template.secrets.each do |_provider, secrets|
+      @stack.module.secrets.each do |_provider, secrets|
         secrets.each do |k, v|
           vars[k.to_s] = v
         end
@@ -52,7 +52,7 @@ module Terraform
     end
 
     def generate
-      @stack.template.generate
+      @stack.module.generate
     end
   end
 end

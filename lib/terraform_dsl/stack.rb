@@ -1,4 +1,4 @@
-require_relative 'stack_templates'
+require_relative 'stack_modules'
 require_relative 'command'
 require_relative 'remote'
 
@@ -15,20 +15,21 @@ module Terraform
       end
     end
 
-    attr_reader :name, :description, :template, :variables,
+    attr_reader :name, :description, :module, :variables,
                 :stack_dir, :stack_id, :remote
 
     def initialize(config)
       @name = config['name']
       @uuid = config['uuid']
-      @template = StackTemplates.find(config['template'])
       @description = config['description'] || ''
       @data_dir = config['data_dir'] || 'data'
       @variables = config['variables'] || {}
       @remote = config['remote'] || {}
       @stack_dir = File.expand_path(File.join(@data_dir, 'stacks', @name))
       @stack_id = "terraform_#{@name}_#{@uuid}"
+      @module = StackModules.get(config['root'])
       @variables['terraform_stack_id'] = @stack_id
+      @module.build(@variables.map { |k, v| [k.to_sym, v] }.to_h)
     end
 
     def apply
