@@ -9,17 +9,16 @@ require_relative 'module.rb'
 require_relative 'output.rb'
 
 module Terraform
-
+  # Stack Modules contain stack elements. A stack is made up of a root module, which may have submodules
   class StackModule
-
     class << self
       def define(name, &block)
-        template = self.new(name, &block)
+        template = new(name, &block)
         StackModules.register(name, template)
       end
 
       def flatten_variable_arrays(variables)
-        variables.map do |k,v|
+        variables.map do |k, v|
           if v.is_a?(Hash) && v.key?(:default) && v[:default].is_a?(Array)
             v[:default] = v[:default].join(',')
           elsif v.is_a?(Array)
@@ -28,12 +27,11 @@ module Terraform
           [k, v]
         end.to_h
       end
-
     end
 
     attr_accessor :secrets
 
-    def initialize(name, &block)
+    def initialize(_name, &block)
       @stack_elements = { resource: {}, provider: {}, variable: {}, output: {}, module: {} }
       @secrets = {}
       @block = block
@@ -46,7 +44,7 @@ module Terraform
     end
 
     def build(**kwargs)
-      vars = kwargs.map{ |k, v| [k, {default: v}] }.to_h
+      vars = kwargs.map { |k, v| [k, { default: v }] }.to_h
       @stack_elements[:variable].merge!(vars)
       b = @block
       instance_eval(&b)
@@ -82,7 +80,7 @@ module Terraform
       get(:terraform_stack_id)
     end
 
-  private
+    private
 
     def register_resource(resource_type, name, &block)
       @stack_elements[:resource] ||= {}
@@ -118,6 +116,5 @@ module Terraform
     alias_method :provider, :register_provider
     alias_method :output,   :register_output
     alias_method :submodule,    :register_module
-
   end
 end

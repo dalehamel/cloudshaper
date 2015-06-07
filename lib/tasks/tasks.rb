@@ -6,7 +6,7 @@ module Terraform
     def self.loadall
       Dir.glob("#{File.join(File.dirname(__dir__), 'tasks')}/*.rake").each { |r| load r }
       template_path = ENV['TERRAFORM_TEMPLATE_PATH'] || 'templates'
-      Dir.glob("#{File.join(Dir.pwd,template_path)}/*.rb").each { |t| require_relative t }
+      Dir.glob("#{File.join(Dir.pwd, template_path)}/*.rb").each { |t| require_relative t }
     end
   end
 end

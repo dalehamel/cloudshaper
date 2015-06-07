@@ -14,7 +14,7 @@ RSpec.describe Terraform::StackModule do
     end
 
     it 'should register variables without default values' do
-      mod = StackModule.define('variable_register_nodefault') { variable(:name) { } }
+      mod = StackModule.define('variable_register_nodefault') { variable(:name) {} }
       mod.build
 
       expect(mod.variables).to be_a(Hash)
@@ -30,7 +30,6 @@ RSpec.describe Terraform::StackModule do
 
       expect(mod.variables[:name][:default]).to eql('not-default')
     end
-
   end
 
   context 'resources' do
@@ -62,7 +61,6 @@ RSpec.describe Terraform::StackModule do
     end
 
     it 'should register resources with provisioners with connections' do
-
       mod = StackModule.define 'register_provision_connection_test' do
         resource 'aws_instance', :a do
           provisioner 'file' do
@@ -86,10 +84,8 @@ RSpec.describe Terraform::StackModule do
           ingress { from_port 80 }
           ingress { from_port 443 }
         end
-
       end
       mod.build
-
 
       sg = mod.elements[:resource][:aws_security_group][:a]
       expect(sg).to include(:ingress)
@@ -98,10 +94,9 @@ RSpec.describe Terraform::StackModule do
       expect(sg[:ingress].last).to eq(from_port: 443)
     end
 
-
     it 'it should be able to access overridden default variables at runtime' do
       mod = StackModule.define 'resource_overriden_runtime_variable' do
-        variable(:ports){ default '22' }
+        variable(:ports) { default '22' }
         resource 'aws_security_group', :a do
           get(:ports).split(',').each do |port|
             ingress { from_port port }
@@ -117,6 +112,5 @@ RSpec.describe Terraform::StackModule do
       expect(sg[:ingress].first).to eq(from_port: '22')
       expect(sg[:ingress].last).to eq(from_port: '443')
     end
-
   end
 end

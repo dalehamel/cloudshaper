@@ -25,7 +25,7 @@ module Terraform
       def init
         config = ENV['STACK_CONFIG'] || 'stacks.yml'
         fail "stacks.yaml already exists at #{File.expand_path(config)}" if File.exist?(config)
-        File.open(config,'w') do |f|
+        File.open(config, 'w') do |f|
           f.write(YAML.dump(base_config))
         end
       end
@@ -37,7 +37,7 @@ module Terraform
       def base_config
         {
           'common' => {},
-          'stacks' => [ base_stack_config ],
+          'stacks' => [base_stack_config]
         }
       end
 
@@ -47,7 +47,7 @@ module Terraform
           'uuid' => uuid,
           'description' => 'SET_A_DESCRIPTION',
           'root' => 'SET_A_TEMPLATE',
-          'variables' => {},
+          'variables' => {}
         }
       end
 

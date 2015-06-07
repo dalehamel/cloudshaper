@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe Terraform::StackModules do
   it 'it should provide separate instantiations of the same module' do
     StackModule.define 'factory_instantiation_test' do
-      variable(:ports){ default '22' }
+      variable(:ports) { default '22' }
       resource 'aws_security_group', :a do
         get(:ports).split(',').each do |port|
           ingress { from_port port }

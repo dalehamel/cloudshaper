@@ -1,7 +1,7 @@
 module Terraform
   module Aws
     # Support AWS S3 remote state backend
-    module Remote_S3
+    module RemoteS3
       private
 
       def options_for_s3(command)
