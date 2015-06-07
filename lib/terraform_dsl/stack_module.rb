@@ -17,9 +17,21 @@ module Terraform
         template = self.new(name, &block)
         StackModules.register(name, template)
       end
+
+      def flatten_variable_arrays(variables)
+        variables.map do |k,v|
+          if v.is_a?(Hash) && v.key?(:default) && v[:default].is_a?(Array)
+            v[:default] = v[:default].join(',')
+          elsif v.is_a?(Array)
+            v = v.join(',')
+          end
+          [k, v]
+        end.to_h
+      end
+
     end
 
-    attr_accessor :stack_elements, :secrets
+    attr_accessor :secrets
 
     def initialize(name, &block)
       @stack_elements = { resource: {}, provider: {}, variable: {}, output: {}, module: {} }
@@ -41,11 +53,11 @@ module Terraform
     end
 
     def generate
-      JSON.pretty_generate(@stack_elements)
+      JSON.pretty_generate(elements)
     end
 
     def variables
-      @stack_elements[:variable]
+      elements[:variable]
     end
 
     def outputs
@@ -54,6 +66,16 @@ module Terraform
 
     def get(variable)
       @stack_elements[:variable].fetch(variable)[:default]
+    end
+
+    def elements
+      elements = @stack_elements.clone
+      variables = StackModule.flatten_variable_arrays(@stack_elements[:variable])
+      @stack_elements[:module].each do |mod, data|
+        elements[:module][mod] = StackModule.flatten_variable_arrays(data)
+      end
+      elements[:variable] = variables
+      elements
     end
 
     def id

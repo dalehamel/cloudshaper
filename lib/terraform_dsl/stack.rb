@@ -16,8 +16,8 @@ module Terraform
       end
     end
 
-    attr_reader :name, :description, :module, :stack_dir,
-                :variables, :stack_id, :remote
+    attr_reader :name, :description, :module,
+                :stack_dir, :stack_id, :remote
 
     def initialize(config)
       @name = config['name']
@@ -62,6 +62,10 @@ module Terraform
 
     def remote_config
       Remote.new(self, :config).execute
+    end
+
+    def variables
+      @module.variables
     end
 
     def to_s

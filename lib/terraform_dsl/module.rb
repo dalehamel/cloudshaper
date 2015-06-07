@@ -1,5 +1,6 @@
 require_relative 'stack_element'
 require_relative 'stack_modules'
+require_relative 'stack_module'
 require_relative 'stacks'
 
 module Terraform

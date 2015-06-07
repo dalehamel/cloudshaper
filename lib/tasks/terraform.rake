@@ -11,7 +11,7 @@ namespace 'terraform' do
   end
 
   desc 'Fetch modules for a stack'
-  task :get, [:name] => :load do
+  task :get, [:name] => :load do |_t, args|
     stack = Terraform::Stacks.stacks[args[:name]]
     stack.get
   end

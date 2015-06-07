@@ -11,7 +11,7 @@ module Terraform
 
     def env
       vars = {}
-      @stack.variables.each { |k, v| vars["TF_VAR_#{k}"] = v }
+      @stack.variables.each { |k, v| vars["TF_VAR_#{k}"] = v[:default] }
       @stack.module.secrets.each do |_provider, secrets|
         secrets.each do |k, v|
           vars[k.to_s] = v

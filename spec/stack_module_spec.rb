@@ -38,7 +38,7 @@ RSpec.describe Terraform::StackModule do
       mod = StackModule.define('register_resource') { resource('aws_instance', :a) { default 'default' } }
       mod.build
 
-      instance = mod.stack_elements[:resource][:aws_instance]
+      instance = mod.elements[:resource][:aws_instance]
       expect(instance).to include(:a)
       expect(instance[:a]).to be_a(Hash)
       expect(instance[:a]).to include(:default)
@@ -55,7 +55,7 @@ RSpec.describe Terraform::StackModule do
       end
       mod.build
 
-      instance = mod.stack_elements[:resource][:aws_instance][:a]
+      instance = mod.elements[:resource][:aws_instance][:a]
       expect(instance).to include(:connection)
       expect(instance[:connection]).to be_a(Hash)
       expect(instance[:connection]).to eq(user: 'root')
@@ -74,7 +74,7 @@ RSpec.describe Terraform::StackModule do
       end
       mod.build
 
-      instance = mod.stack_elements[:resource][:aws_instance][:a]
+      instance = mod.elements[:resource][:aws_instance][:a]
       expect(instance).to include(:provisioner)
       expect(instance[:provisioner].first).to include(:file)
       expect(instance[:provisioner].first[:file][:connection]).to eq(user: 'root')
@@ -91,7 +91,7 @@ RSpec.describe Terraform::StackModule do
       mod.build
 
 
-      sg = mod.stack_elements[:resource][:aws_security_group][:a]
+      sg = mod.elements[:resource][:aws_security_group][:a]
       expect(sg).to include(:ingress)
       expect(sg[:ingress]).to be_a(Array)
       expect(sg[:ingress].first).to eq(from_port: 80)
@@ -111,7 +111,7 @@ RSpec.describe Terraform::StackModule do
 
       mod.build(ports: '22,80,443')
 
-      sg = mod.stack_elements[:resource][:aws_security_group][:a]
+      sg = mod.elements[:resource][:aws_security_group][:a]
       expect(sg).to include(:ingress)
       expect(sg[:ingress]).to be_a(Array)
       expect(sg[:ingress].first).to eq(from_port: '22')

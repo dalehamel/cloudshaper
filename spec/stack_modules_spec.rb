@@ -17,8 +17,8 @@ RSpec.describe Terraform::StackModules do
     first.build(ports: '80')
     second.build(ports: '443')
 
-    sg_first = first.stack_elements[:resource][:aws_security_group][:a]
-    sg_second = second.stack_elements[:resource][:aws_security_group][:a]
+    sg_first = first.elements[:resource][:aws_security_group][:a]
+    sg_second = second.elements[:resource][:aws_security_group][:a]
 
     expect(sg_first[:ingress]).to eq(from_port: '80')
     expect(sg_second[:ingress]).to eq(from_port: '443')
