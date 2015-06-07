@@ -95,7 +95,7 @@ module Terraform
     alias_method :variable, :register_variable
     alias_method :provider, :register_provider
     alias_method :output,   :register_output
-    alias_method :modul,    :register_module
+    alias_method :submodule,    :register_module
 
   end
 end
