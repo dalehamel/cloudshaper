@@ -1,6 +1,6 @@
 require_relative '../terraform_dsl.rb'
 namespace 'terraform' do
-  desc 'Loads available stack templates'
+  desc 'Loads available stack modules'
   task :load do
     Terraform::Stacks.load
   end

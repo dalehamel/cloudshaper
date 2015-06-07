@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'terraform_dsl'
-  s.version     = '0.0.3'
+  s.version     = '0.0.4'
   s.date        = '2015-06-01'
   s.summary     = 'Wrap hashicorps "terraform" in a ruby DSL for managing stack templates'
   s.description = 'Terraform DSL provides a syntax for managing terraform infrastructure entirely in git'
