@@ -54,6 +54,10 @@ module Terraform
       def reset!
         @stacks ||= {}
       end
+
+      def dir
+        File.expand_path(File.join(ENV['TERRAFORM_DATA_DIR'] || 'data', 'stacks'))
+      end
     end
     reset!
   end

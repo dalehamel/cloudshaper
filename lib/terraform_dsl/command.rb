@@ -40,7 +40,7 @@ module Terraform
         when :destroy
           '-input=false -force'
         when :plan
-          '-input=false'
+          '-input=false -module-depth=-1'
         when :graph
           '-draw-cycles'
         else

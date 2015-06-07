@@ -21,7 +21,7 @@ RSpec.describe Terraform::StackModule do
       expect(mod.variables).to include(:name)
       expect(mod.variables[:name]).to be_a(Hash)
       expect(mod.variables[:name]).to include(:default)
-      expect(mod.variables[:name][:default]).to eq(nil)
+      expect(mod.variables[:name][:default]).to eq('')
     end
 
     it 'should accept variables at runtime' do

@@ -10,6 +10,19 @@ namespace 'terraform' do
     Terraform::Stacks.init
   end
 
+  desc 'Fetch modules for a stack'
+  task :get, [:name] => :load do
+    stack = Terraform::Stacks.stacks[args[:name]]
+    stack.get
+  end
+
+  desc 'Fetch modules for all stacks'
+  task get_all: :load do
+    Terraform::Stacks.stacks.each do |_name, stack|
+      stack.get
+    end
+  end
+
   desc 'List all available stacks'
   task list: :load do
     Terraform::Stacks.stacks.each do |name, _stack|
@@ -26,7 +39,7 @@ namespace 'terraform' do
   end
 
   desc 'Show all pending stack changes'
-  task show_all: :load do
+  task show_all: [:load, :get_all] do
     Terraform::Stacks.stacks.each do |_name, stack|
       puts stack
       stack.plan

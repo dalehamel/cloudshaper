@@ -56,6 +56,10 @@ module Terraform
       @stack_elements[:variable].fetch(variable)[:default]
     end
 
+    def id
+      get(:terraform_stack_id)
+    end
+
   private
 
     def register_resource(resource_type, name, &block)
@@ -67,7 +71,7 @@ module Terraform
     def register_variable(name, &block)
       new_variable = Terraform::Variable.new(self, &block).fields
       unless @stack_elements[:variable].key?(name.to_sym)
-        @stack_elements[:variable][name.to_sym] = { default: new_variable[:default] }
+        @stack_elements[:variable][name.to_sym] = { default: new_variable[:default] || '' }
       end
     end
 
@@ -77,7 +81,7 @@ module Terraform
     end
 
     def register_module(name, &block)
-      new_module = Terraform::Module.new(self, &block).fields
+      new_module = Terraform::Module.new(self, name, &block).fields
       @stack_elements[:module][name.to_sym] = new_module
     end
 
@@ -91,7 +95,7 @@ module Terraform
     alias_method :variable, :register_variable
     alias_method :provider, :register_provider
     alias_method :output,   :register_output
-    alias_method :module,   :register_module
+    alias_method :modul,    :register_module
 
   end
 end
