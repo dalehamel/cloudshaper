@@ -1,6 +1,6 @@
-require 'terraform_dsl/aws/remote_s3'
+require 'cloudshaper/aws/remote_s3'
 
-module Terraform
+module Cloudshaper
   # Wrap 'remote' commands, such as config, pull, and push
   # This allows us to store state remotely using different providers
   class Remote < Command

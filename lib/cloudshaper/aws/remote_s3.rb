@@ -1,4 +1,4 @@
-module Terraform
+module Cloudshaper
   module Aws
     # Support AWS S3 remote state backend
     module RemoteS3

@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/dalehamel/terraform_dsl.svg)](https://travis-ci.org/dalehamel/terraform_dsl)
+[![Build Status](https://travis-ci.org/dalehamel/cloudshaper.svg)](https://travis-ci.org/dalehamel/cloudshaper)
 
-# Terraform DSL
+# Cloudshaper
 
 This is a simple DSL for wrapping hashicorp's [terraform configuration](https://terraform.io/docs/configuration/index.html).
 
@@ -50,13 +50,13 @@ Create a stack module, like one of our [examples](examples), such as our [simple
 Generally, you need to do:
 
 ```
-require 'terraform_dsl'
+require 'cloudshaper'
 ```
 
-And then subclass Terraform::StackModule
+And then subclass Cloudshaper::StackModule
 
 ```
-class MyAwesomeStackModule < Terraform::StackModule
+class MyAwesomeStackModule < Cloudshaper::StackModule
 ```
 
 Within that class, define resources using a similar syntax to [terraform's configuration](https://terraform.io/docs/configuration/index.html).
@@ -117,18 +117,18 @@ stacks:
 
 You may also specify a 'common' block, that will be merged into all stacks.
 
-Terraform stacks need somewhere to store their state. By default, this will be the local filesystem.
+Cloudshaper stacks need somewhere to store their state. By default, this will be the local filesystem.
 
 It's highly recommended that you use a [remote backend](https://www.terraform.io/docs/commands/remote-config.html) instead, so that you can share your stacks.
 
 ### Tasks
 
-Create a rake file that loads your modules, and calls Terraform::Tasks.loadall.
+Create a rake file that loads your modules, and calls Cloudshaper::Tasks.loadall.
 
 ```
 ## Loads terraform tasks and modules
-require 'terraform_dsl'
-Terraform::Tasks.loadall
+require 'cloudshaper'
+Cloudshaper::Tasks.loadall
 
 ```
 

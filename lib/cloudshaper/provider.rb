@@ -1,7 +1,7 @@
-require 'terraform_dsl/secrets'
-require 'terraform_dsl/stack_element'
+require 'cloudshaper/secrets'
+require 'cloudshaper/stack_element'
 
-module Terraform
+module Cloudshaper
   # Implements DSL for a terraform provider, and a means of loading secrets.
   class Provider < StackElement
     def load_secrets(name)

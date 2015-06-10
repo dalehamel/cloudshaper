@@ -1,4 +1,4 @@
-module Terraform
+module Cloudshaper
   # Wraps terraform command execution
   class Command
     attr_accessor :command

@@ -1,9 +1,9 @@
-require 'terraform_dsl/stack_element'
-require 'terraform_dsl/stack_modules'
-require 'terraform_dsl/stack_module'
-require 'terraform_dsl/stacks'
+require 'cloudshaper/stack_element'
+require 'cloudshaper/stack_modules'
+require 'cloudshaper/stack_module'
+require 'cloudshaper/stacks'
 
-module Terraform
+module Cloudshaper
   # Supports terraform 'modules'. In our case, we call them submodules because
   # Module is a ruby keyword. We also support directly referencing other ruby-defined modules.
   class Module < StackElement

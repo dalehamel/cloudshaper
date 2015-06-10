@@ -1,4 +1,4 @@
-module Terraform
+module Cloudshaper
   # Aws provider-specific functionality, to be mixed in to stack elements
   module Aws
     def self.taggable?(resource_type)
@@ -17,7 +17,7 @@ module Terraform
     def post_processing_aws
       return unless Aws.taggable?(@resource_type)
       @fields[:tags] ||= {}
-      @fields[:tags][:terraform_stack_id] = var(:terraform_stack_id)
+      @fields[:tags][:cloudshaper_stack_id] = var(:cloudshaper_stack_id)
     end
   end
 end

@@ -1,3 +1,3 @@
-module Terraform
+module Cloudshaper
   VERSION = '0.0.4'
 end
