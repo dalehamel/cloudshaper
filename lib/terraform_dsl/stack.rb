@@ -1,7 +1,7 @@
-require_relative 'stacks'
-require_relative 'stack_modules'
-require_relative 'command'
-require_relative 'remote'
+require 'terraform_dsl/stacks'
+require 'terraform_dsl/stack_modules'
+require 'terraform_dsl/command'
+require 'terraform_dsl/remote'
 
 module Terraform
   # Wrapper to instantiate a stack from a yaml definition

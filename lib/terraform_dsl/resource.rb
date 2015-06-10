@@ -1,4 +1,4 @@
-require_relative 'stack_element.rb'
+require 'terraform_dsl/stack_element'
 
 module Terraform
   # Defines a terraform resource

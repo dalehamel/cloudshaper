@@ -1,7 +1,7 @@
 require 'yaml'
 require 'securerandom'
 
-require_relative 'stack.rb'
+require 'terraform_dsl/stack'
 
 module Terraform
   # Singleton to keep track of stack templates

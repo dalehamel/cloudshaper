@@ -1,4 +1,4 @@
-require_relative 'aws/remote_s3.rb'
+require 'terraform_dsl/aws/remote_s3'
 
 module Terraform
   # Wrap 'remote' commands, such as config, pull, and push

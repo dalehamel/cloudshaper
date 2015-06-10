@@ -1,4 +1,5 @@
-require_relative '../terraform_dsl.rb'
+require 'terraform_dsl'
+
 namespace 'terraform' do
   desc 'Loads available stack modules'
   task :load do

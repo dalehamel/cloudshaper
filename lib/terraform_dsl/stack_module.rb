@@ -1,12 +1,12 @@
 require 'json'
 require 'fileutils'
 
-require_relative 'stack_modules.rb'
-require_relative 'resource.rb'
-require_relative 'provider.rb'
-require_relative 'variable.rb'
-require_relative 'module.rb'
-require_relative 'output.rb'
+require 'terraform_dsl/stack_modules'
+require 'terraform_dsl/resource'
+require 'terraform_dsl/provider'
+require 'terraform_dsl/variable'
+require 'terraform_dsl/module'
+require 'terraform_dsl/output'
 
 module Terraform
   # Stack Modules contain stack elements. A stack is made up of a root module, which may have submodules
