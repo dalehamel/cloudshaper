@@ -9,6 +9,9 @@ Gem::Specification.new do |s|
   s.files       = Dir['lib/**/*']
   s.homepage    = 'https://rubygems.org/gems/terraform_dsl'
   s.license       = 'MIT'
-  s.add_dependency 'rake', ['=10.4.2']
-  s.add_development_dependency 'rspec', ['=3.2.0']
+
+  s.add_runtime_dependency 'rake', '~> 10.4'
+
+  s.add_development_dependency 'bundler'
+  s.add_development_dependency 'minitest', '~> 5.6'
 end
