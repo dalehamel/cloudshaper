@@ -1,7 +1,7 @@
-require_relative 'stack_element'
-require_relative 'stack_modules'
-require_relative 'stack_module'
-require_relative 'stacks'
+require 'terraform_dsl/stack_element'
+require 'terraform_dsl/stack_modules'
+require 'terraform_dsl/stack_module'
+require 'terraform_dsl/stacks'
 
 module Terraform
   # Supports terraform 'modules'. In our case, we call them submodules because

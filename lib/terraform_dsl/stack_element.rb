@@ -1,4 +1,4 @@
-require_relative 'aws/tagging.rb'
+require 'terraform_dsl/aws/tagging'
 
 module Terraform
   # Defines a single terraform stack element, subclass for any element defined in terraform DSL
