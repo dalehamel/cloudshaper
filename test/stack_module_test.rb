@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class StackModuleTest < Minitest::Test
-  include Terraform
+  include Cloudshaper
 
   def test_multiple_instantiations_of_module
     StackModule.define 'factory_instantiation_test' do

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    terraform_dsl (0.0.4)
+    cloudshaper (0.0.4)
       rake (~> 10.4)
 
 GEM
@@ -22,6 +22,6 @@ PLATFORMS
 
 DEPENDENCIES
   bundler
+  cloudshaper!
   minitest (~> 5.6)
   simplecov (= 0.10.0)
-  terraform_dsl!

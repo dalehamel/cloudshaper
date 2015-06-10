@@ -1,14 +1,14 @@
 require 'json'
 require 'fileutils'
 
-require 'terraform_dsl/stack_modules'
-require 'terraform_dsl/resource'
-require 'terraform_dsl/provider'
-require 'terraform_dsl/variable'
-require 'terraform_dsl/module'
-require 'terraform_dsl/output'
+require 'cloudshaper/stack_modules'
+require 'cloudshaper/resource'
+require 'cloudshaper/provider'
+require 'cloudshaper/variable'
+require 'cloudshaper/module'
+require 'cloudshaper/output'
 
-module Terraform
+module Cloudshaper
   # Stack Modules contain stack elements. A stack is made up of a root module, which may have submodules
   class StackModule
     class << self
@@ -86,28 +86,28 @@ module Terraform
     def register_resource(resource_type, name, &block)
       @stack_elements[:resource] ||= {}
       @stack_elements[:resource][resource_type.to_sym] ||= {}
-      @stack_elements[:resource][resource_type.to_sym][name.to_sym] = Terraform::Resource.new(self, name, resource_type, &block).fields
+      @stack_elements[:resource][resource_type.to_sym][name.to_sym] = Cloudshaper::Resource.new(self, name, resource_type, &block).fields
     end
 
     def register_variable(name, &block)
-      new_variable = Terraform::Variable.new(self, &block).fields
+      new_variable = Cloudshaper::Variable.new(self, &block).fields
       unless @stack_elements[:variable].key?(name.to_sym)
         @stack_elements[:variable][name.to_sym] = { default: new_variable[:default] || '' }
       end
     end
 
     def register_output(name, &block)
-      new_output = Terraform::Output.new(self, &block).fields
+      new_output = Cloudshaper::Output.new(self, &block).fields
       @stack_elements[:output][name.to_sym] = new_output
     end
 
     def register_module(name, &block)
-      new_module = Terraform::Module.new(self, name, &block).fields
+      new_module = Cloudshaper::Module.new(self, name, &block).fields
       @stack_elements[:module][name.to_sym] = new_module
     end
 
     def register_provider(name, &block)
-      provider = Terraform::Provider.new(self, &block)
+      provider = Cloudshaper::Provider.new(self, &block)
       @secrets.merge!(provider.load_secrets(name))
       @stack_elements[:provider][name.to_sym] = provider.fields
     end

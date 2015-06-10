@@ -1,16 +1,16 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'terraform_dsl/version'
+require 'cloudshaper/version'
 
 Gem::Specification.new do |spec|
-  spec.name        = 'terraform_dsl'
-  spec.version     = Terraform::VERSION
+  spec.name        = 'cloudshaper'
+  spec.version     = Cloudshaper::VERSION
   spec.summary     = 'Wrap hashicorps "terraform" in a ruby DSL for managing stack templates'
-  spec.description = 'Terraform DSL provides a syntax for managing terraform infrastructure entirely in git'
+  spec.description = 'Cloudshaper provides a syntax for managing terraform infrastructure entirely in git'
   spec.authors     = ['Dale Hamel']
   spec.email       = 'dale.hamel@srvthe.net'
   spec.files       = Dir['lib/**/*']
-  spec.homepage    = 'https://rubygems.org/gems/terraform_dsl'
+  spec.homepage    = 'https://github.com/dalehamel/cloudshaper'
   spec.license     = 'MIT'
 
   spec.files         = `git ls-files`.split($/)

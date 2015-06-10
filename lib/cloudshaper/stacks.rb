@@ -1,9 +1,9 @@
 require 'yaml'
 require 'securerandom'
 
-require 'terraform_dsl/stack'
+require 'cloudshaper/stack'
 
-module Terraform
+module Cloudshaper
   # Singleton to keep track of stack templates
   class Stacks
     class MalformedConfig < StandardError; end

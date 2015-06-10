@@ -1,6 +1,6 @@
 require 'rake'
 
-module Terraform
+module Cloudshaper
   # Loads all rake tasks when terraform_dsl is included by a rake script
   class Tasks
     def self.loadall

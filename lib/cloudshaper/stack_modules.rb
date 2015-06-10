@@ -1,4 +1,4 @@
-module Terraform
+module Cloudshaper
   # Stack module factory, register a module and provide clones of it
   class StackModules
     class ModuleNotFound < StandardError; end

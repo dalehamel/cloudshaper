@@ -1,6 +1,6 @@
-require 'terraform_dsl/aws/tagging'
+require 'cloudshaper/aws/tagging'
 
-module Terraform
+module Cloudshaper
   # Defines a single terraform stack element, subclass for any element defined in terraform DSL
   class StackElement
     include Aws
@@ -24,7 +24,7 @@ module Terraform
         end
         add_field(symbol, args[0])
       else
-        add_field(symbol, Terraform::StackElement.new(@module, &block).fields)
+        add_field(symbol, Cloudshaper::StackElement.new(@module, &block).fields)
       end
     end
 

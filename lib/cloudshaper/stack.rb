@@ -1,9 +1,9 @@
-require 'terraform_dsl/stacks'
-require 'terraform_dsl/stack_modules'
-require 'terraform_dsl/command'
-require 'terraform_dsl/remote'
+require 'cloudshaper/stacks'
+require 'cloudshaper/stack_modules'
+require 'cloudshaper/command'
+require 'cloudshaper/remote'
 
-module Terraform
+module Cloudshaper
   # Wrapper to instantiate a stack from a yaml definition
   class Stack
     class MalformedConfig < Exception; end
@@ -25,9 +25,9 @@ module Terraform
       @description = config['description'] || ''
       @variables = config['variables'] || {}
       @remote = config['remote'] || {}
-      @stack_id = "terraform_#{@name}_#{@uuid}"
+      @stack_id = "cloudshaper#{@name}_#{@uuid}"
       @module = StackModules.get(config['root'])
-      @variables['terraform_stack_id'] = @stack_id
+      @variables['cloudshaper_stack_id'] = @stack_id
       @stack_dir = File.join(Stacks.dir, @stack_id)
       @module.build(@variables.map { |k, v| [k.to_sym, v] }.to_h)
     end

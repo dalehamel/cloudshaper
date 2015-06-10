@@ -1,6 +1,6 @@
-require 'terraform_dsl/stack_element'
+require 'cloudshaper/stack_element'
 
-module Terraform
+module Cloudshaper
   # Defines a terraform resource
   class Resource < StackElement
     attr_reader :resource_name
