@@ -18,14 +18,15 @@ module Terraform
       end
 
       def flatten_variable_arrays(variables)
-        variables.map do |k, v|
+        vars = variables.map do |k, v|
           if v.is_a?(Hash) && v.key?(:default) && v[:default].is_a?(Array)
             v[:default] = v[:default].join(',')
           elsif v.is_a?(Array)
             v = v.join(',')
           end
           [k, v]
-        end.to_h
+        end
+        Hash[vars]
       end
     end
 
@@ -44,7 +45,7 @@ module Terraform
     end
 
     def build(**kwargs)
-      vars = kwargs.map { |k, v| [k, { default: v }] }.to_h
+      vars = Hash[kwargs.map { |k, v| [k, { default: v }] }]
       @stack_elements[:variable].merge!(vars)
       b = @block
       instance_eval(&b)
