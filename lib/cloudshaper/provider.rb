@@ -6,7 +6,9 @@ module Cloudshaper
   class Provider < StackElement
     def load_secrets(name)
       @secrets ||= {}
-      @secrets[name.to_sym] = SECRETS[name.to_sym]
+      if SECRETS.has_key? name.to_sym
+        @secrets[name.to_sym] = SECRETS[name.to_sym]
+      end
       @secrets
     end
   end
