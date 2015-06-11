@@ -3,6 +3,15 @@ require 'test_helper'
 class StackModuleTest < Minitest::Test
   include Cloudshaper
 
+  def setup
+    StackModules.reset!
+  end
+
+  def test_multiple_modules_same_name_raises_exception
+    StackModule.define 'same_name_test'
+    assert_raises(StackModules::ModuleAlreadyRegistered) { StackModule.define 'same_name_test' }
+  end
+
   def test_multiple_instantiations_of_module
     StackModule.define 'factory_instantiation_test' do
       variable(:ports) { default '22' }
@@ -26,35 +35,26 @@ class StackModuleTest < Minitest::Test
     assert_equal '443', sg_second[:ingress].fetch(:from_port)
   end
 
-  #   it 'should register variables with default values' do
-  #     mod = StackModule.define('variable_register_default') { variable(:name) { default 'default' } }
-  #     mod.build
+  def test_module_build_registers_variable_with_defaults
+    mod = StackModule.define('variable_register_default') { variable(:name) { default 'spam' } }
+    mod.build
 
-  #     expect(mod.variables).to be_a(Hash)
-  #     expect(mod.variables).to include(:name)
-  #     expect(mod.variables[:name]).to be_a(Hash)
-  #     expect(mod.variables[:name]).to include(:default)
-  #     expect(mod.variables[:name][:default]).to eq('default')
-  #   end
+    assert_equal 'spam', mod.variables.fetch(:name).fetch(:default)
+  end
 
-  #   it 'should register variables without default values' do
-  #     mod = StackModule.define('variable_register_nodefault') { variable(:name) {} }
-  #     mod.build
+  def test_module_build_registers_variables_without_defaults
+    mod = StackModule.define('variable_register_nodefault') { variable(:name) {} }
+    mod.build
 
-  #     expect(mod.variables).to be_a(Hash)
-  #     expect(mod.variables).to include(:name)
-  #     expect(mod.variables[:name]).to be_a(Hash)
-  #     expect(mod.variables[:name]).to include(:default)
-  #     expect(mod.variables[:name][:default]).to eq('')
-  #   end
+    assert_equal '', mod.variables.fetch(:name).fetch(:default)
+  end
 
-  #   it 'should accept variables at runtime' do
-  #     mod = StackModule.define('variable_override') { variable(:name) { default 'default' } }
-  #     mod.build(name: 'not-default')
+  def test_module_build_registers_variables_at_runtime
+    mod = StackModule.define('variable_override') { variable(:name) { default 'default' } }
+    mod.build(name: 'not-default')
 
-  #     expect(mod.variables[:name][:default]).to eql('not-default')
-  #   end
-  # end
+    assert_equal 'not-default', mod.variables.fetch(:name).fetch(:default)
+  end
 
   def test_register_resource
     mod = StackModule.define('register_resource') { resource('aws_instance', :a) { default 'default' } }
@@ -123,30 +123,8 @@ class StackModuleTest < Minitest::Test
     end
     mod.build(ports: '22,80,443')
 
-
     sg = mod.elements.fetch(:resource).fetch(:aws_security_group).fetch(:a)
     ingress = sg.fetch(:ingress)
     assert_equal [{from_port: "22"}, {from_port: "80"}, {from_port: "443"}], ingress
   end
-
-
-  #   it 'it should be able to access overridden default variables at runtime' do
-  #     mod = StackModule.define 'resource_overriden_runtime_variable' do
-  #       variable(:ports) { default '22' }
-  #       resource 'aws_security_group', :a do
-  #         get(:ports).split(',').each do |port|
-  #           ingress { from_port port }
-  #         end
-  #       end
-  #     end
-
-  #     mod.build(ports: '22,80,443')
-
-  #     sg = mod.elements[:resource][:aws_security_group][:a]
-  #     expect(sg).to include(:ingress)
-  #     expect(sg[:ingress]).to be_a(Array)
-  #     expect(sg[:ingress].first).to eq(from_port: '22')
-  #     expect(sg[:ingress].last).to eq(from_port: '443')
-  #   end
-  # end
 end
