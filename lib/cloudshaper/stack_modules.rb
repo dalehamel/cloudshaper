@@ -16,7 +16,7 @@ module Cloudshaper
       end
 
       def reset!
-        @stack_modules ||= {}
+        @stack_modules = {}
       end
     end
     reset!
