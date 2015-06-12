@@ -9,7 +9,9 @@ class StackModuleTest < Minitest::Test
 
   def test_multiple_modules_same_name_raises_exception
     StackModule.define 'same_name_test'
-    assert_raises(StackModules::ModuleAlreadyRegistered) { StackModule.define 'same_name_test' }
+    assert_raises(StackModules::ModuleAlreadyRegistered) do
+      StackModule.define 'same_name_test'
+    end
   end
 
   def test_multiple_instantiations_of_module
@@ -28,39 +30,45 @@ class StackModuleTest < Minitest::Test
     first.build(ports: '80')
     second.build(ports: '443')
 
-    sg_first = first.elements[:resource][:aws_security_group][:a]
-    sg_second = second.elements[:resource][:aws_security_group][:a]
+    sg_first = first.get_resource(:aws_security_group, :a)
+    sg_second = second.get_resource(:aws_security_group, :a)
 
     assert_equal '80', sg_first[:ingress].fetch(:from_port)
     assert_equal '443', sg_second[:ingress].fetch(:from_port)
   end
 
   def test_module_build_registers_variable_with_defaults
-    mod = StackModule.define('variable_register_default') { variable(:name) { default 'spam' } }
+    mod = StackModule.define('variable_register_default') do
+      variable(:name) { default 'spam' }
+    end
     mod.build
 
-    assert_equal 'spam', mod.variables.fetch(:name).fetch(:default)
+    assert_equal 'spam', mod.get(:name)
   end
 
   def test_module_build_registers_variables_without_defaults
     mod = StackModule.define('variable_register_nodefault') { variable(:name) {} }
     mod.build
 
-    assert_equal '', mod.variables.fetch(:name).fetch(:default)
+    assert_equal '', mod.get(:name)
   end
 
   def test_module_build_registers_variables_at_runtime
-    mod = StackModule.define('variable_override') { variable(:name) { default 'default' } }
+    mod = StackModule.define('variable_override') do
+      variable(:name) { default 'default' }
+    end
     mod.build(name: 'not-default')
 
-    assert_equal 'not-default', mod.variables.fetch(:name).fetch(:default)
+    assert_equal 'not-default', mod.get(:name)
   end
 
   def test_register_resource
-    mod = StackModule.define('register_resource') { resource('aws_instance', :a) { default 'default' } }
+    mod = StackModule.define('register_resource') do
+      resource('aws_instance', :a) { default 'default' }
+    end
     mod.build
 
-    instance = mod.elements.fetch(:resource).fetch(:aws_instance).fetch(:a)
+    instance = mod.get_resource(:aws_instance, :a)
     assert_equal 'default', instance.fetch(:default)
   end
 
@@ -74,7 +82,7 @@ class StackModuleTest < Minitest::Test
     end
     mod.build
 
-    instance = mod.elements.fetch(:resource).fetch(:aws_instance).fetch(:a)
+    instance = mod.get_resource(:aws_instance, :a)
     assert_equal 'root', instance.fetch(:connection).fetch(:user)
   end
 
@@ -90,7 +98,7 @@ class StackModuleTest < Minitest::Test
     end
     mod.build
 
-    instance    = mod.elements.fetch(:resource).fetch(:aws_instance).fetch(:a)
+    instance    = mod.get_resource(:aws_instance, :a)
     provisioner = instance.fetch(:provisioner).first
     connection  = provisioner.fetch(:file).fetch(:connection)
     assert_equal 'root', connection.fetch(:user)
@@ -105,7 +113,7 @@ class StackModuleTest < Minitest::Test
     end
     mod.build
 
-    sg = mod.elements.fetch(:resource).fetch(:aws_security_group).fetch(:a)
+    sg = mod.get_resource(:aws_security_group, :a)
     ingress = sg.fetch(:ingress)
 
     assert_kind_of Array, ingress
@@ -123,7 +131,7 @@ class StackModuleTest < Minitest::Test
     end
     mod.build(ports: '22,80,443')
 
-    sg = mod.elements.fetch(:resource).fetch(:aws_security_group).fetch(:a)
+    sg = mod.get_resource(:aws_security_group, :a)
     ingress = sg.fetch(:ingress)
     assert_equal [{from_port: "22"}, {from_port: "80"}, {from_port: "443"}], ingress
   end
