@@ -20,15 +20,17 @@ module Cloudshaper
                 :stack_dir, :stack_id, :remote
 
     def initialize(config)
-      @name = config['name']
-      @uuid = config['uuid']
-      @description = config['description'] || ''
-      @variables = config['variables'] || {}
+      @name = config.fetch('name')
+      @uuid = config.fetch('uuid')
       @remote = config['remote'] || {}
+      @description = config['description'] || ''
+
       @stack_id = "cloudshaper#{@name}_#{@uuid}"
-      @module = StackModules.get(config['root'])
-      @variables['cloudshaper_stack_id'] = @stack_id
       @stack_dir = File.join(Stacks.dir, @stack_id)
+
+      @module = StackModules.get(config.fetch('root'))
+      @variables = config['variables'] || {}
+      @variables['cloudshaper_stack_id'] = @stack_id
       @module.build(@variables.map { |k, v| [k.to_sym, v] }.to_h)
     end
 
@@ -62,10 +64,6 @@ module Cloudshaper
 
     def remote_config
       Remote.new(self, :config).execute
-    end
-
-    def variables
-      @module.variables
     end
 
     def to_s

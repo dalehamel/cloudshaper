@@ -55,17 +55,23 @@ module Cloudshaper
       JSON.pretty_generate(elements)
     end
 
-    def variables
-      elements[:variable]
-    end
-
-    def outputs
-      @stack_elements[:output]
+    def id
+      get(:terraform_stack_id)
     end
 
     def get(variable)
-      @stack_elements[:variable].fetch(variable)[:default]
+      elements[:variable].fetch(variable)[:default]
     end
+
+    def each_variable(&b)
+      elements[:variable].each(&b)
+    end
+
+    def get_resource(type, id)
+      @stack_elements[:resource].fetch(type).fetch(id)
+    end
+
+    private
 
     def elements
       elements = @stack_elements.clone
@@ -76,12 +82,6 @@ module Cloudshaper
       elements[:variable] = variables
       elements
     end
-
-    def id
-      get(:terraform_stack_id)
-    end
-
-    private
 
     def register_resource(resource_type, name, &block)
       @stack_elements[:resource] ||= {}
@@ -112,10 +112,10 @@ module Cloudshaper
       @stack_elements[:provider][name.to_sym] = provider.fields
     end
 
-    alias_method :resource, :register_resource
-    alias_method :variable, :register_variable
-    alias_method :provider, :register_provider
-    alias_method :output,   :register_output
-    alias_method :submodule,    :register_module
+    alias_method :resource,  :register_resource
+    alias_method :variable,  :register_variable
+    alias_method :provider,  :register_provider
+    alias_method :output,    :register_output
+    alias_method :submodule, :register_module
   end
 end
