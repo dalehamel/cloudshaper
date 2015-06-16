@@ -38,6 +38,11 @@ module Cloudshaper
       "${var.#{variable_name}}"
     end
 
+    # Reference a list variable
+    def var_list(variable_name)
+      ["${split(\",\",var.#{variable_name})}"]
+    end
+
     # Syntax to handle interpolation of resource variables
     def value_of(resource_type, resource_name, value_type)
       "${#{resource_type}.#{resource_name}.#{value_type}}"
