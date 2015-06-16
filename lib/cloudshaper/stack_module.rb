@@ -30,13 +30,14 @@ module Cloudshaper
       end
     end
 
-    attr_accessor :secrets
+    attr_accessor :name, :secrets
 
-    def initialize(_name, &block)
+    def initialize(name, &block)
+      @name = name
       @stack_elements = { resource: {}, provider: {}, variable: {}, output: {}, module: {} }
       @secrets = {}
       @block = block
-      variable(:terraform_stack_id) { default '' }
+      variable(:cloudshaper_stack_id) { default '' }
     end
 
     def clone
@@ -56,7 +57,7 @@ module Cloudshaper
     end
 
     def id
-      get(:terraform_stack_id)
+      get(:cloudshaper_stack_id)
     end
 
     def get(variable)
@@ -108,7 +109,7 @@ module Cloudshaper
     end
 
     def register_module(name, &block)
-      new_module = Cloudshaper::Module.new(self, name, &block).fields
+      new_module = Cloudshaper::Module.new(self, &block).fields
       @stack_elements[:module][name.to_sym] = new_module
     end
 
