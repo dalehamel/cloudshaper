@@ -36,7 +36,7 @@ module Cloudshaper
       @stack_elements = { resource: {}, provider: {}, variable: {}, output: {}, module: {} }
       @secrets = {}
       @block = block
-      variable(:terraform_stack_id) {}
+      variable(:terraform_stack_id) { default '' }
     end
 
     def clone
@@ -90,9 +90,15 @@ module Cloudshaper
     end
 
     def register_variable(name, &block)
+      return if @stack_elements[:variable].key?(name)
+
       new_variable = Cloudshaper::Variable.new(self, &block).fields
-      unless @stack_elements[:variable].key?(name.to_sym)
-        @stack_elements[:variable][name.to_sym] = { default: new_variable[:default] || '' }
+      if new_variable[:default].nil?
+        @stack_elements[:variable][name.to_sym] = {}
+      else
+        @stack_elements[:variable][name.to_sym] = {
+          default: new_variable[:default]
+        }
       end
     end
 
