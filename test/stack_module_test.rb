@@ -46,11 +46,11 @@ class StackModuleTest < Minitest::Test
     assert_equal 'spam', mod.get(:name)
   end
 
-  def test_module_build_registers_variables_without_defaults
-    mod = StackModule.define('variable_register_nodefault') { variable(:name) {} }
+  def test_required_variable_has_no_default_value
+    mod = StackModule.define('resource_required_variable') { variable(:name) {} }
     mod.build
 
-    assert_equal '', mod.get(:name)
+    assert_nil mod.get(:name)
   end
 
   def test_module_build_registers_variables_at_runtime
