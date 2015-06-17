@@ -1,5 +1,4 @@
 require 'cloudshaper/stacks'
-require 'cloudshaper/stack_modules'
 require 'cloudshaper/command'
 require 'cloudshaper/remote'
 
@@ -16,8 +15,9 @@ module Cloudshaper
       end
     end
 
-    attr_reader :name, :description, :module,
-                :stack_dir, :stack_id, :remote
+    attr_reader :name, :description, :root,
+                :stack_dir, :stack_id, :remote,
+                :variables
 
     def initialize(config)
       @name = config.fetch('name')
@@ -25,13 +25,11 @@ module Cloudshaper
       @remote = config['remote'] || {}
       @description = config['description'] || ''
 
-      @stack_id = "cloudshaper#{@name}_#{@uuid}"
+      @root = config.fetch('root')
+      @stack_id = "cloudshaper_#{@name}_#{@uuid}"
       @stack_dir = File.join(Stacks.dir, @stack_id)
-
-      @module = StackModules.get(config.fetch('root'))
       @variables = config['variables'] || {}
       @variables['cloudshaper_stack_id'] = @stack_id
-      @module.build(@variables.map { |k, v| [k.to_sym, v] }.to_h)
     end
 
     def apply

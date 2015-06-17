@@ -107,7 +107,7 @@ common:
       region: us-east-1
 stacks:
   - name: teststack
-    uuid: 1433296428_0safh8-Y # must be unique
+    uuid: 8adcbfb1-fdcc-4558-8958-ea8a9e1874ea # must be unique
     description: just a test stack
     root: simpleapp
     variables:
@@ -121,39 +121,9 @@ Cloudshaper stacks need somewhere to store their state. By default, this will be
 
 It's highly recommended that you use a [remote backend](https://www.terraform.io/docs/commands/remote-config.html) instead, so that you can share your stacks.
 
-### Tasks
+### Commands
 
-Create a rake file that loads your modules, and calls Cloudshaper::Tasks.loadall.
-
-```
-## Loads terraform tasks and modules
-require 'cloudshaper'
-Cloudshaper::Tasks.loadall
-
-```
-
-This will add some terraform tasks for managing your terraform stacks:
-
-```
-rake terraform:apply[name]          # Apply pending changes for a stack
-rake terraform:apply_all            # Apply all pending stack changes
-rake terraform:destroy[name]        # Destroy a stack
-rake terraform:get[name]            # Fetch modules for a stack
-rake terraform:get_all              # Fetch modules for all stacks
-rake terraform:init                 # Initialize stacks.yml if it does not exist
-rake terraform:list                 # List all available stacks
-rake terraform:load                 # Loads available stack modules
-rake terraform:plan[name]           # Show pending changes for a stack
-rake terraform:pull[name]           # Pulls stack state from remote location
-rake terraform:pull_all             # Pulls stack states from remote location
-rake terraform:push[name]           # Push stack state to remote location
-rake terraform:push_all             # Push stack states to remote location
-rake terraform:remote_config[name]  # Sets up remote config for a stack
-rake terraform:remote_config_all    # Sets up remote config for all stacks that support it
-rake terraform:show[name]           # Show details about a stack by name
-rake terraform:show_all             # Show all pending stack changes
-rake terraform:uuid                 # Generate a UUID for a stack, so stacks do not clobber each other
-```
+TODO
 
 # Credits
 

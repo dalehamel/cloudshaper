@@ -30,10 +30,6 @@ module Cloudshaper
         end
       end
 
-      def uuid
-        "#{Time.now.utc.to_i}_#{SecureRandom.urlsafe_base64(6)}"
-      end
-
       def base_config
         {
           'common' => {},
@@ -44,7 +40,7 @@ module Cloudshaper
       def base_stack_config
         {
           'name' => 'SET_NAME',
-          'uuid' => uuid,
+          'uuid' => SecureRandom.uuid,
           'description' => 'SET_A_DESCRIPTION',
           'root' => 'SET_A_TEMPLATE',
           'variables' => {}
