@@ -16,8 +16,8 @@ module Cloudshaper
       end
     end
 
-    attr_reader :name, :description, :module,
-                :stack_dir, :stack_id, :remote
+    attr_reader :name, :description, :module, :stack_dir,
+                :stack_id, :remote, :variables
 
     def initialize(config)
       @name = config.fetch('name')
@@ -31,7 +31,6 @@ module Cloudshaper
       @module = StackModules.get(config.fetch('root'))
       @variables = config['variables'] || {}
       @variables['cloudshaper_stack_id'] = @stack_id
-      @module.build(@variables.map { |k, v| [k.to_sym, v] }.to_h)
     end
 
     def apply
