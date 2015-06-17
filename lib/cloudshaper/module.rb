@@ -22,7 +22,6 @@ module Cloudshaper
     end
 
     def build_submodule(file_path, parent_module, child_module)
-      return if File.exists? file_path
       child_module.build(cloudshaper_stack_id: parent_module.id)
       File.open(file_path, 'w') { |f| f.write(child_module.generate) }
     end
