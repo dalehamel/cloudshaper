@@ -1,3 +1,5 @@
+require 'cloudshaper/secrets'
+
 module Cloudshaper
   # Wraps terraform command execution
   class Command
@@ -11,8 +13,8 @@ module Cloudshaper
 
     def env
       vars = {}
-      @stack.module.each_variable { |k, v| vars["TF_VAR_#{k}"] = v[:default] }
-      @stack.module.secrets.each do |_provider, secrets|
+      @stack.variables { |k, v| vars["TF_VAR_#{k}"] = v[:default] }
+      SECRETS.each do |_provider, secrets|
         secrets.each do |k, v|
           vars[k.to_s] = v
         end

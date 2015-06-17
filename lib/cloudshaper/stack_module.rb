@@ -114,9 +114,8 @@ module Cloudshaper
     end
 
     def register_provider(name, &block)
-      provider = Cloudshaper::Provider.new(self, &block)
-      @secrets.merge!(provider.load_secrets(name))
-      @stack_elements[:provider][name.to_sym] = provider.fields
+      provider = Cloudshaper::Provider.new(self, &block).fields
+      @stack_elements[:provider][name.to_sym] = provider
     end
 
     alias_method :resource,  :register_resource
