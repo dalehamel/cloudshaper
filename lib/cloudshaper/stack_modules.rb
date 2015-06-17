@@ -10,6 +10,10 @@ module Cloudshaper
         @stack_modules[name.downcase] = stack_module
       end
 
+      def has?(stack_module_name)
+        @stack_modules.key?(stack_module_name.downcase)
+      end
+
       def get(stack_module_name)
         fail ModuleNotFound, "#{stack_module_name} module module not found" unless @stack_modules.key?(stack_module_name.downcase)
         @stack_modules[stack_module_name.downcase].clone

@@ -7,32 +7,24 @@ module Cloudshaper
   # Supports terraform 'modules'. In our case, we call them submodules because
   # Module is a ruby keyword. We also support directly referencing other ruby-defined modules.
   class Module < StackElement
-    def initialize(parent_module, module_name, &block)
+    def initialize(parent_module, &block)
       super(parent_module, &block)
 
-      if @fields[:source].match(/^module_/)
-        build_submodule(parent_module, module_name)
+      if StackModules.has? @fields[:source].to_s
+        mod = StackModules.get @fields[:source].to_s
+        module_path = File.join(Stacks.dir, parent_module.id, mod.name)
+        FileUtils.mkdir_p(module_path)
+        @fields[:source] = File.expand_path(module_path)
+
+        file_path = File.join(module_path, 'stack_module.tf.json')
+        build_submodule(file_path, parent_module, mod)
       end
     end
 
-    private
-
-    def build_submodule(parent_module, module_name)
-      generated = generate_child_module(parent_module)
-      module_path = File.join(Stacks.dir, parent_module.id, module_name.to_s)
-      FileUtils.mkdir_p(module_path)
-      File.open(File.join(module_path, 'stack_module.tf.json'), 'w') { |f| f.write(generated) }
-      @fields[:source] = File.expand_path(module_path)
-    end
-
-    def generate_child_module(parent_module)
-      variables = @fields.clone
-      variables.delete(:source)
-      variables[:terraform_stack_id] = parent_module.id
-      child_name = @fields[:source].gsub(/^module_/, '')
-      child_module = StackModules.get(child_name)
-      child_module.build(variables)
-      child_module.generate
+    def build_submodule(file_path, parent_module, child_module)
+      return if File.exists? file_path
+      child_module.build(cloudshaper_stack_id: parent_module.id)
+      File.open(file_path, 'w') { |f| f.write(child_module.generate) }
     end
   end
 end
