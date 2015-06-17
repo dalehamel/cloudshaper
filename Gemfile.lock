@@ -1,8 +1,8 @@
 PATH
   remote: .
   specs:
-    cloudshaper (0.0.4)
-      rake (~> 10.4)
+    cloudshaper (0.1.0)
+      thor (~> 0.19.1)
 
 GEM
   remote: https://rubygems.org/
@@ -16,6 +16,7 @@ GEM
       json (~> 1.8)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.0)
+    thor (0.19.1)
 
 PLATFORMS
   ruby
@@ -24,4 +25,5 @@ DEPENDENCIES
   bundler
   cloudshaper!
   minitest (~> 5.6)
+  rake (~> 10.4)
   simplecov (= 0.10.0)

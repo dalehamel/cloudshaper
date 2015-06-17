@@ -5,8 +5,8 @@ require 'cloudshaper/version'
 Gem::Specification.new do |spec|
   spec.name        = 'cloudshaper'
   spec.version     = Cloudshaper::VERSION
-  spec.summary     = 'Wrap hashicorps "terraform" in a ruby DSL for managing stack templates'
-  spec.description = 'Cloudshaper provides a syntax for managing terraform infrastructure entirely in git'
+  spec.summary     = 'Wrap hashicorps "terraform"'
+  spec.description = 'Wraps hashicoprs terraform to improve workflow'
   spec.authors     = ['Dale Hamel']
   spec.email       = 'dale.hamel@srvthe.net'
   spec.files       = Dir['lib/**/*']
@@ -18,8 +18,9 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency 'rake', '~> 10.4'
+  spec.add_runtime_dependency 'thor', '~> 0.19.1'
 
   spec.add_development_dependency 'bundler'
+  spec.add_development_dependency 'rake', '~> 10.4'
   spec.add_development_dependency 'minitest', '~> 5.6'
 end
